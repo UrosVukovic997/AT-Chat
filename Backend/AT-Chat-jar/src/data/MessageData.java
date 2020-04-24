@@ -2,8 +2,11 @@ package data;
 
 import java.util.ArrayList;
 
+import javax.ejb.Singleton;
+
 import model.Message;
 
+@Singleton
 public class MessageData {
     private ArrayList<Message> messages;
     private static MessageData instance = null;

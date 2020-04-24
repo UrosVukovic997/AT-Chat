@@ -3,7 +3,6 @@ package beans;
 import java.util.ArrayList;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -19,7 +18,7 @@ import model.User;
 /**
  * Session Bean implementation class RegistrationBean
  */
-@Stateless
+
 @LocalBean
 @Path("/user")
 
@@ -31,7 +30,7 @@ public class AuthBean {
     public AuthBean() {
         // TODO Auto-generated constructor stub
     }
-
+    
 	@POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -47,7 +46,7 @@ public class AuthBean {
 	@POST
 	@Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String login(User user) {
 		for (User currentUser : UsersData.getInstance().getAllUsers()) {
             if (user.getUsername().equals(currentUser.getUsername()) && user.getPassword().equals(currentUser.getPassword())) {

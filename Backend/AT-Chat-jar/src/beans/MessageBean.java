@@ -3,7 +3,6 @@ package beans;
 import java.util.ArrayList;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,7 +17,6 @@ import model.Message;
 /**
  * Session Bean implementation class MessageBean
  */
-@Stateless
 @LocalBean
 @Path("/message")
 public class MessageBean {
@@ -30,12 +28,15 @@ public class MessageBean {
         // TODO Auto-generated constructor stub
     }
 
+    
 	@POST
     @Path("/send")
     @Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.TEXT_PLAIN)
-    public String registerUser(Message message)  {
-        MessageData.getInstance().getMessages().add(message);
+    public String registerUser(Message msg)  {
+        MessageData.getInstance().getMessages().add(msg);
+        System.out.println("From:"+msg.getSender()+", To:"+msg.getReceiver()+", Subject:"+msg.getSubject());
+        
         return "Message sended";
     }
 	

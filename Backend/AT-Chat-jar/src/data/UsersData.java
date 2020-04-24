@@ -2,8 +2,11 @@ package data;
 
 import java.util.ArrayList;
 
+import javax.ejb.Singleton;
+
 import model.User;
 
+@Singleton
 public class UsersData {
 	
     private ArrayList<User> allUsers;

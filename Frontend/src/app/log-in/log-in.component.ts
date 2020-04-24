@@ -24,9 +24,9 @@ export class LogInComponent implements OnInit {
   }
   onSubmit() {
     this.service.login(this.loginForm.value)
-      .pipe(first())
-      .subscribe();
+      .subscribe(
+      );
+    localStorage.setItem('currentuser', this.loginForm.value.username);
     this.router.navigate(['/chat']);
-
   }
 }

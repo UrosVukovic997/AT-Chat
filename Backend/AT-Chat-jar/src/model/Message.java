@@ -4,7 +4,7 @@ public class Message {
 
     private String receiver;
     private String sender;
-    private String content;
+    private String dateTime;
     private String subject;
     
     
@@ -13,11 +13,11 @@ public class Message {
 		super();
 
 	}
-	public Message(String receiver, String sender, String content, String subject) {
+	public Message(String receiver, String sender, String dateTime, String subject) {
 		super();
 		this.receiver = receiver;
 		this.sender = sender;
-		this.content = content;
+		this.dateTime = dateTime;
 		this.subject = subject;
 	}
 	public String getReceiver() {
@@ -32,11 +32,11 @@ public class Message {
 	public void setSender(String sender) {
 		this.sender = sender;
 	}
-	public String getContent() {
-		return content;
+	public String getDateTime() {
+		return dateTime;
 	}
-	public void setContent(String content) {
-		this.content = content;
+	public void setDateTime(String dateTime) {
+		this.dateTime = dateTime;
 	}
 	public String getSubject() {
 		return subject;

@@ -9,7 +9,7 @@ Pokretanje servera komandom u Cli:
 Backend:
 
 Potrebno je onemoguciti CORS u pretrazivacu ili izmeniti Standalone fajl u WildFly servera:
-
+...
 <host name="default-host" alias="localhost">
             <location name="/" handler="welcome-content"/>
             <filter-ref name="server-header"/>
@@ -29,3 +29,4 @@ Potrebno je onemoguciti CORS u pretrazivacu ili izmeniti Standalone fajl u WildF
         <response-header name="Access-Control-Allow-Credentials" header-name="Access-Control-Allow-Credentials" header-value="true"/>
         <response-header name="Access-Control-Max-Age" header-name="Access-Control-Max-Age" header-value="1"/>
     </filters>
+    ...

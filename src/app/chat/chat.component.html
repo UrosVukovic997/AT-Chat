@@ -1,0 +1,121 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<html>
+<head>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
+
+</head>
+<body>
+<!-- header -->
+<nav class="navbar">
+<!--
+  <div class="navbar-brand">
+    <button class="navbar-item navbar-item-right">gfdgfdg</button>
+  </div>
+
+-->
+    <a class="dropdown-item" href="" (click)="logout()">Logout</a>
+</nav>
+
+<div class="container">
+  <h3 class=" text-center">Messaging</h3>
+  <div class="messaging">
+    <div class="inbox_msg">
+      <div class="inbox_people">
+        <div class="headind_srch">
+          <div class="recent_heading">
+            <h4>Online</h4>
+          </div>
+          <div class="srch_bar">
+            <div class="stylish-input-group">
+              <input type="text" class="search-bar"  placeholder="Search" >
+              <span class="input-group-addon">
+                <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                </span> </div>
+          </div>
+        </div>
+        <div class="inbox_chat">
+          <div class="{{(selected === 'All') ? 'chat_list active_chat' : 'chat_list'}}" (click)="proba('All')">
+            <div class="chat_people">
+              <div class="chat_img"> <img src="https://www.kindpng.com/picc/m/144-1447066_introducing-clients-manager-group-icon-facebook-group.png" alt="sunil"> </div>
+              <div class="chat_ib">
+                <h5>All</h5>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngFor="let user of online">
+            <div class="{{(selected === user) ? 'chat_list active_chat' : 'chat_list'}}"  *ngIf="!(curentuser === user)"
+                 id="tab-{{user}}" (click)="proba(user)">
+              <div class="chat_people">
+                <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                <div class="chat_ib">
+                  <h5>{{user}}</h5>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+
+        <div class="mesgs">
+          <div class="msg_history">
+            <ng-container *ngFor="let message of messages">
+              <ng-container *ngIf="selected === message.sender && curentuser === message.receiver">
+                <div class="incoming_msg">
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>{{message.subject}}</p>
+                      <span class="time_date">{{message.dateTime}}</span></div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="selected === message.receiver && curentuser === message.sender">
+                <div class="outgoing_msg_msg">
+                  <div class="received_msg">
+                    <div class="sent_msg">
+                      <p>{{message.subject}}</p>
+                      <span class="time_date">{{message.dateTime}}</span></div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="selected === 'All' && selected === message.receiver && curentuser !== message.sender" >
+                <div class="incoming_msg">
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p style="color:limegreen;"> {{message.sender}}</p>
+                      <p>{{message.subject}}</p>
+                      <span class="time_date">{{message.dateTime}}</span></div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          <!--
+
+
+<div class="outgoing_msg">
+<div class="sent_msg">
+  <p>Test which is a new approach to have all
+    solutions</p>
+  <span class="time_date"> 11:01 AM    |    June 9</span> </div>
+</div>
+-->
+            </div>
+        <div class="type_msg">
+          <div class="input_msg_write">
+            <input type="text" class="write_msg" id="messageField" placeholder="Type a message" />
+            <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true" (click)="send()"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div></div>
+</body>
+</html>

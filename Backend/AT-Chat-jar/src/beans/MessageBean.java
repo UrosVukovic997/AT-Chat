@@ -2,6 +2,7 @@ package beans;
 
 import java.util.ArrayList;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import data.MessageData;
 import model.Message;
+import ws.WSEndPoint;
 
 /**
  * Session Bean implementation class MessageBean
@@ -20,6 +22,8 @@ import model.Message;
 @LocalBean
 @Path("/message")
 public class MessageBean {
+
+	@EJB WSEndPoint ws;
 
     /**
      * Default constructor. 
@@ -35,8 +39,10 @@ public class MessageBean {
 	@Produces(MediaType.TEXT_PLAIN)
     public String registerUser(Message msg)  {
         MessageData.getInstance().getMessages().add(msg);
-        System.out.println("From:"+msg.getSender()+", To:"+msg.getReceiver()+", Subject:"+msg.getSubject());
-        
+        ws.echoTextMessage("receiver:" + msg.getReceiver() + 
+		"sender:" + msg.getSender() + 
+		"dateTime:" + msg.getDateTime() + 
+		"subject: " + msg.getSubject());
         return "Message sended";
     }
 	

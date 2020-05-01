@@ -2,6 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {UsersService} from '../services/users.service';
 import {DOCUMENT, formatDate} from '@angular/common';
 import {Router} from '@angular/router';
+import {ChatService} from '../services/chat.service';
+import {Message} from '../services/chat.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -13,8 +16,14 @@ export class ChatComponent implements OnInit {
   online: any = [];
   selected = 'All';
   curentuser = localStorage.getItem('currentuser');
-  htmlToAdd: any;
-  constructor(private service: UsersService, @Inject(DOCUMENT) document, private router: Router) { }
+  messages: Message [] = [];
+  constructor(private service: UsersService, @Inject(DOCUMENT) document,
+              private router: Router, private chatService: ChatService, private authService: AuthService) {
+    chatService.messages.subscribe(msg => {
+      console.log('Response from websocket: ' + msg.subject);
+      this.messages.push(msg);
+    });
+  }
 
   ngOnInit(): void {
     if (localStorage.getItem('currentuser') === null) {
@@ -47,14 +56,13 @@ export class ChatComponent implements OnInit {
     dateTime: formatDate(new Date(), 'dd/MM/yyyy HH:mm:ss', 'en'),
     subject: (document.getElementById('messageField')as HTMLInputElement).value};
 
-    this.htmlToAdd = message;
+    this.chatService.messages.next(message);
+
     (document.getElementById('messageField')as HTMLInputElement).value = '';
-    this.service.sendMessage(message).subscribe(
-      data => {}
-    );
   }
 
   logout() {
      localStorage.removeItem('currentuser');
+     this.authService.logout({username: localStorage.getItem('currentuser'), password : ''});
   }
 }

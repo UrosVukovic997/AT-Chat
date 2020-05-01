@@ -7,7 +7,7 @@
 <html>
 <head>
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet"
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
 
 </head>
 <body>
@@ -64,25 +64,39 @@
 
 
         <div class="mesgs">
-            <div class="msg_history">
-              <ng-container *ngIf="htmlToAdd !== undefined">
-              <div class="outgoing_msg">
-                <div class="sent_msg">
-                  <p>{{htmlToAdd.subject}}</p>
-                  <span class="time_date"> {{htmlToAdd.dateTime}}</span> </div>
-              </div>
+          <div class="msg_history">
+            <ng-container *ngFor="let message of messages">
+              <ng-container *ngIf="selected === message.sender && curentuser === message.receiver">
+                <div class="incoming_msg">
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>{{message.subject}}</p>
+                      <span class="time_date">{{message.dateTime}}</span></div>
+                  </div>
+                </div>
               </ng-container>
-
+              <ng-container *ngIf="selected === message.receiver && curentuser === message.sender">
+                <div class="outgoing_msg_msg">
+                  <div class="received_msg">
+                    <div class="sent_msg">
+                      <p>{{message.subject}}</p>
+                      <span class="time_date">{{message.dateTime}}</span></div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="selected === 'All' && selected === message.receiver && curentuser !== message.sender" >
+                <div class="incoming_msg">
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p style="color:limegreen;"> {{message.sender}}</p>
+                      <p>{{message.subject}}</p>
+                      <span class="time_date">{{message.dateTime}}</span></div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
           <!--
-          <div class="incoming_msg">
-            <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-            <div class="received_msg">
-              <div class="received_withd_msg">
-                <p>Test which is a new approach to have all
-                  solutions</p>
-                <span class="time_date"> 11:01 AM    |    June 9</span></div>
-            </div>
-          </div>
+
 
 <div class="outgoing_msg">
 <div class="sent_msg">

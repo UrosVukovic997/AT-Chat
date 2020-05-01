@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
 import {first} from 'rxjs/operators';
+import {ChatService} from '../services/chat.service';
 
 @Component({
   selector: 'app-log-in',
@@ -24,9 +25,10 @@ export class LogInComponent implements OnInit {
   }
   onSubmit() {
     this.service.login(this.loginForm.value)
-      .subscribe(
-      );
-    localStorage.setItem('currentuser', this.loginForm.value.username);
-    this.router.navigate(['/chat']);
+      .subscribe( data => {
+        localStorage.setItem('currentuser', this.loginForm.value.username);
+        this.router.navigate(['/chat']);
+      })
+      ;
   }
 }

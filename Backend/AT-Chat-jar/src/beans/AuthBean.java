@@ -2,18 +2,24 @@ package beans;
 
 import java.util.ArrayList;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import data.UsersData;
 import exceptions.UserRegistrationException;
 import model.User;
+import ws.WSEndPoint;
+
 
 /**
  * Session Bean implementation class RegistrationBean
@@ -23,6 +29,10 @@ import model.User;
 @Path("/user")
 
 public class AuthBean {
+	
+	@EJB WSEndPoint ws; //websocket
+	@Context private HttpServletRequest request;
+
 
     /**
      * Default constructor. 
@@ -34,19 +44,20 @@ public class AuthBean {
 	@POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_PLAIN)
     public String registerUser(User user) throws UserRegistrationException  {
         for (User u : UsersData.getInstance().getAllUsers()) {
             if (u.getUsername().equals(user.getUsername())) throw new UserRegistrationException();
         }
         UsersData.getInstance().getAllUsers().add(user);
         System.out.println("New user registered");
-        return "Registered successfully";
+        return "{status: Registered successfully}";
     }
 	
 	@POST
 	@Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public String login(User user) {
 		for (User currentUser : UsersData.getInstance().getAllUsers()) {
             if (user.getUsername().equals(currentUser.getUsername()) && user.getPassword().equals(currentUser.getPassword())) {

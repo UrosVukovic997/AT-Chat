@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {UsersService} from '../services/users.service';
 import {DOCUMENT, formatDate} from '@angular/common';
 import {Router} from '@angular/router';
-import {ChatService} from '../services/chat.service';
+import {ChatService, UserEvent} from '../services/chat.service';
 import {Message} from '../services/chat.service';
 import {AuthService} from '../services/auth.service';
 
@@ -17,22 +17,37 @@ export class ChatComponent implements OnInit {
   selected = 'All';
   curentuser = localStorage.getItem('currentuser');
   messages: Message [] = [];
+  onlineUsers: string [] = [];
+
   constructor(private service: UsersService, @Inject(DOCUMENT) document,
               private router: Router, private chatService: ChatService, private authService: AuthService) {
     chatService.messages.subscribe(msg => {
       console.log('Response from websocket: ' + msg.subject);
       this.messages.push(msg);
     });
+    chatService.onlineUsers.subscribe(msg => {
+      console.log('Akcija: ' + msg.akcija + 'korisnik: ' + msg.user);
+
+      if (msg.akcija === 'ulogovan') {
+        this.onlineUsers.push(msg.user);
+      }
+      if (msg.akcija === 'izlogovan') {
+        this.onlineUsers = this.onlineUsers.filter(item => item !== msg.user);
+      }
+    });
   }
 
   ngOnInit(): void {
     if (localStorage.getItem('currentuser') === null) {
-      this.router.navigate(['/']);
+       this.router.navigate(['/']);
     }
     console.log('user-' + (localStorage.getItem('currentuser')));
     this.online = this.service.getOnline().subscribe(
       data => {
         this.online = data;
+        for (const d of this.online) {
+          this.onlineUsers.push(d);
+        }
       }
     );
   }
@@ -62,7 +77,15 @@ export class ChatComponent implements OnInit {
   }
 
   logout() {
-     localStorage.removeItem('currentuser');
-     this.authService.logout({username: localStorage.getItem('currentuser'), password : ''});
+    const user = JSON.stringify({
+      username: localStorage.getItem('currentuser'),
+      password: '',
+    });
+    this.authService.logout(user).subscribe((ok) => {
+      localStorage.removeItem('currentuser');
+      this.authService.disconect();
+      this.router.navigate(['/']);
+    });
+
   }
 }

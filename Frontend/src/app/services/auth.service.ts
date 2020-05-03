@@ -10,6 +10,10 @@ import { Subject, Observable, Observer } from 'rxjs';
 })
 export class AuthService {
   private subject: Subject<MessageEvent>;
+  private subject2: Subject<MessageEvent>;
+
+  private ws1: WebSocket;
+  private ws2: WebSocket;
   constructor(private http: HttpClient) {
   }
 
@@ -28,7 +32,14 @@ export class AuthService {
   }
 
   logout(user){
-    return this.http.delete('http://localhost:8080/AT-Chat-war/rest/user/logout', user);
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: user
+    };
+    console.log('usao');
+    return this.http.delete('http://localhost:8080/AT-Chat-war/rest/user/logout', options);
   }
 
 
@@ -37,13 +48,21 @@ export class AuthService {
 
   public connect(url): Subject<MessageEvent> {
       if (!this.subject) {
-      this.subject = this.create(url);
+      this.subject = this.create(url, 0);
       console.log('Successfully connected: ' + url);
     }
       return this.subject;
   }
 
-  private create(url): Subject<MessageEvent> {
+  public connectOnline(url): Subject<MessageEvent> {
+    if (!this.subject2) {
+      this.subject2 = this.create(url, 1);
+      console.log('Successfully connected: ' + url);
+    }
+    return this.subject2;
+  }
+
+  private create(url, i): Subject<MessageEvent> {
       const ws = new WebSocket(url);
 
       const observable = Observable.create((obs: Observer<MessageEvent>) => {
@@ -60,6 +79,16 @@ export class AuthService {
         }
       }
     };
+      if (i){
+        this.ws2 = ws;
+      }
+      else {
+        this.ws1 = ws;
+      }
       return Subject.create(observer, observable);
+  }
+  public disconect() {
+    this.ws1.close();
+    this.ws2.close();
   }
 }

@@ -19,7 +19,7 @@
   </div>
 
 -->
-    <a class="dropdown-item" href="" (click)="logout()">Logout</a>
+    <a class="mat-button" (click)="logout()">Logout</a>
 </nav>
 
 <div class="container">
@@ -48,7 +48,7 @@
               </div>
             </div>
           </div>
-          <ng-container *ngFor="let user of online">
+          <ng-container *ngFor="let user of onlineUsers">
             <div class="{{(selected === user) ? 'chat_list active_chat' : 'chat_list'}}"  *ngIf="!(curentuser === user)"
                  id="tab-{{user}}" (click)="proba(user)">
               <div class="chat_people">

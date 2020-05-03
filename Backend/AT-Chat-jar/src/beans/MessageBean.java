@@ -39,10 +39,6 @@ public class MessageBean {
 	@Produces(MediaType.TEXT_PLAIN)
     public String registerUser(Message msg)  {
         MessageData.getInstance().getMessages().add(msg);
-        ws.echoTextMessage("receiver:" + msg.getReceiver() + 
-		"sender:" + msg.getSender() + 
-		"dateTime:" + msg.getDateTime() + 
-		"subject: " + msg.getSubject());
         return "Message sended";
     }
 	

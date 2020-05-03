@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,7 +29,7 @@ import ws.WSEndPoint;
 
 public class AuthBean {
 	
-	@EJB WSEndPoint ws; //websocket
+	@EJB WSEndPoint ws;
 	@Context private HttpServletRequest request;
 
 
@@ -80,8 +79,7 @@ public class AuthBean {
 	@DELETE
 	@Path("/logout")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String logout(User user) {
+    public void logout(User user) {
         User userFound = null;
         for (User currentUser : UsersData.getInstance().getOnlineUsers()) {
             if (user.getUsername().equals(currentUser.getUsername())) {
@@ -91,9 +89,8 @@ public class AuthBean {
                   
         if (userFound != null) {
         	UsersData.getInstance().logout(userFound);
-        	return userFound.getUsername() + " successfully logged out";
+        	System.out.println("Uspesno izlogovan");
         }
-    	return "User is not logged in";
 
     }
 	

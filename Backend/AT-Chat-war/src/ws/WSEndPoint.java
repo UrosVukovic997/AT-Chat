@@ -6,17 +6,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
+import javax.websocket.CloseReason;
+import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
-import org.jboss.security.acl.EntitlementEntry;
-
 import com.google.gson.Gson;
 
-import jdk.nashorn.internal.parser.JSONParser;
 import model.Message;
 
 
@@ -30,7 +29,6 @@ static Map<String, Session> sessions = new ConcurrentHashMap<>();
 	@OnOpen
 	public void onOpen(@PathParam("user") String user, Session session) {
 		sessions.put(user, session);
-		System.out.println("Otvorena sesija. User: " + user);
 	}
 	
 
@@ -67,6 +65,12 @@ static Map<String, Session> sessions = new ConcurrentHashMap<>();
 		}
 		
 	}
-
+	
+	@OnClose
+		public void onClose(@PathParam("user") String user, Session session, CloseReason closeReason) {
+			// TODO Auto-generated method stub
+		sessions.remove(user);
+		}
+		
 	
 }

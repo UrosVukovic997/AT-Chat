@@ -3,6 +3,7 @@ import {Subject} from 'rxjs';
 import {AuthService} from './auth.service';
 import {map} from 'rxjs/operators';
 import DateTimeFormat = Intl.DateTimeFormat;
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 const CHAT_URL = 'ws://localhost:8080/AT-Chat-war/ws/';
 const ONLINE_USERS_URL = 'ws://localhost:8080/AT-Chat-war/users/';
@@ -28,7 +29,7 @@ export class ChatService {
   public messages: Subject<Message>;
   public onlineUsers: Subject<UserEvent>;
 
-  constructor(private service: AuthService) {
+  constructor(private service: AuthService, private http: HttpClient) {
     this.messages = <Subject<Message>> service.connect(CHAT_URL + localStorage.getItem('currentuser')).pipe(map(
       (response: MessageEvent): Message => {
         const data = JSON.parse(response.data);
@@ -51,4 +52,7 @@ export class ChatService {
       }
     ));
   }
+
+
+
 }

@@ -18,51 +18,74 @@ export class ChatComponent implements OnInit {
   curentuser = localStorage.getItem('currentuser');
   messages: Message [] = [];
   onlineUsers: string [] = [];
+  newMessage: { [key: string]: boolean; } = {};
+
 
   constructor(private service: UsersService, @Inject(DOCUMENT) document,
               private router: Router, private chatService: ChatService, private authService: AuthService) {
+
     chatService.messages.subscribe(msg => {
       console.log('Response from websocket: ' + msg.subject);
       this.messages.push(msg);
+      if (msg.receiver !== 'All') {
+        this.newMessage[msg.sender] = true;
+      }
+      else{
+        if (msg.sender !== this.curentuser) {
+          this.newMessage[msg.receiver] = true;
+        }
+      }
     });
     chatService.onlineUsers.subscribe(msg => {
       console.log('Akcija: ' + msg.akcija + 'korisnik: ' + msg.user);
 
       if (msg.akcija === 'ulogovan') {
-        this.onlineUsers.push(msg.user);
+        // if (!this.onlineUsers[msg.user]) {
+          this.onlineUsers.push(msg.user);
+          this.newMessage[msg.user] = false;
+        // }
       }
       if (msg.akcija === 'izlogovan') {
         this.onlineUsers = this.onlineUsers.filter(item => item !== msg.user);
+        this.newMessage[msg.user] = false;
       }
     });
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('currentuser') === null) {
-       this.router.navigate(['/']);
-    }
+    this.service.isLoggedIn(localStorage.getItem('currentuser')).subscribe(
+      data => {
+        if(data !== 'Korisnik je ulogovan'){
+          localStorage.removeItem('currentuser');
+          this.router.navigate(['/']);
+        }
+      }
+    );
     console.log('user-' + (localStorage.getItem('currentuser')));
     this.online = this.service.getOnline().subscribe(
       data => {
         this.online = data;
         for (const d of this.online) {
           this.onlineUsers.push(d);
+          this.newMessage[d] = false;
         }
       }
     );
+    let temp: any = [];
+    temp = this.service.getAll(localStorage.getItem('currentuser')).subscribe(
+      data => {
+        temp = data;
+        console.log(temp);
+        for (const tmp of temp) {
+          this.messages.push(tmp);
+        }
+      });
   }
 
-  filter(){
-    for (const entry of this.online) {
-      if (entry.username === localStorage.getItem('currentuser')) {
-        console.log('okinuo');
-        this.online.remove(entry);
-      }
-    }
-  }
+
 
   proba(a) {
-    console.log(a);
+    this.newMessage[a] = false;
     this.selected = a;
   }
 

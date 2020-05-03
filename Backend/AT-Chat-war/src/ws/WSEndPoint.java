@@ -16,6 +16,7 @@ import javax.websocket.server.ServerEndpoint;
 
 import com.google.gson.Gson;
 
+import data.MessageData;
 import model.Message;
 
 
@@ -37,7 +38,7 @@ static Map<String, Session> sessions = new ConcurrentHashMap<>();
 		
 		Gson g = new Gson();		
 		Message message = g.fromJson(msg, Message.class);
-				
+		MessageData.getInstance().getMessages().add(message);
 		if (message.getReceiver().equals("All")) {
 			for(Map.Entry<String, Session> entry : sessions.entrySet()) {
 				try {

@@ -56,6 +56,13 @@ public class UserEndPoint {
 		// TODO Auto-generated method stub
 		System.out.println("Gasenje ws conekcije");
 		sessions.remove(user);
+		this.close(user);
+		
+	}
+	
+
+	public void close(String user) {
+		// TODO Auto-generated method stub
 		for(Map.Entry<String, Session> entry : sessions.entrySet()) {
 			try {
 				JsonObject innerObject = new JsonObject();

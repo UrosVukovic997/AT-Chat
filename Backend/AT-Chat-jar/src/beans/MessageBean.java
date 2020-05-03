@@ -23,7 +23,6 @@ import ws.WSEndPoint;
 @Path("/message")
 public class MessageBean {
 
-	@EJB WSEndPoint ws;
 
     /**
      * Default constructor. 
@@ -46,11 +45,13 @@ public class MessageBean {
 	@Path("/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Message> getMessages(@PathParam("username") String username){
+		System.out.println("sve poruke: "+ username);
 		ArrayList<Message> returnValue = new ArrayList<>();
 		for(Message message : MessageData.getInstance().getMessages()) {
-			if(message.getReceiver().equals(username))
+			if(message.getReceiver().equals(username) || message.getSender().equals(username) || message.getReceiver().equals("All"))
 				returnValue.add(message);
 		}
 	return returnValue;
 	}
+	
 }

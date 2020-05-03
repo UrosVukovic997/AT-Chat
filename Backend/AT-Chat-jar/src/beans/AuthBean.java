@@ -10,6 +10,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import data.UsersData;
 import exceptions.UserRegistrationException;
 import model.User;
+import ws.UserEndPoint;
 import ws.WSEndPoint;
 
 
@@ -29,7 +31,7 @@ import ws.WSEndPoint;
 
 public class AuthBean {
 	
-	@EJB WSEndPoint ws;
+	@EJB UserEndPoint uep;
 	@Context private HttpServletRequest request;
 
 
@@ -90,6 +92,7 @@ public class AuthBean {
         if (userFound != null) {
         	UsersData.getInstance().logout(userFound);
         	System.out.println("Uspesno izlogovan");
+        	uep.close(user.getUsername());
         }
 
     }
@@ -103,5 +106,22 @@ public class AuthBean {
 			returnValue.add(currentUser.getUsername());
 		}
 	return returnValue;
+	}
+	
+	@GET
+	@Path("/isLoggedIn/{username}")
+	public String isLoggedIn(@PathParam("username") String username){
+		Boolean flag = false;
+		for(User tmp : UsersData.getInstance().getAllUsers()) {
+			if(tmp.getUsername().equals(username)) {
+				flag = true;
+				break;
+			}	
+		}
+		if(flag)
+			return "Korisnik je ulogovan";
+		
+		else
+			return "Korisnik nije ulogovan";
 	}
 }
